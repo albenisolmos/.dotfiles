@@ -7,6 +7,7 @@ fi
 if [ -d "$HOME/.cargo/env" ]; then
 	source "$HOME/.cargo/env"
 fi
+
 PATH="$HOME/.local/share/pnpm:$PATH"
 PATH="$HOME/.cargo/bin:$PATH"
 
@@ -17,6 +18,7 @@ export GTK_OVERLAY_SCROLLING=0
 export EDITOR="nvim"
 export OPENER="xdg-open"
 export KEYBOARD_LAYOUT="colemak"
+export PNPM_HOME=""
 export PATH
 export ZDOTDIR=~/.config/zsh
 
