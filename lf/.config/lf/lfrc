@@ -1,0 +1,162 @@
+set icons on
+set ratios '2:1'
+set preview on
+set incsearch on
+set scrolloff 4
+set previewer ctpv
+set cleaner ctpvclear
+&ctpv -s $id
+&ctpvquit $id
+
+# For my colemak keyboard
+map n updir
+map o open
+map e down
+map i up
+
+map <c-l> set nopreview set ratios '2'
+map <c-u> set preview ctpv set radios '2:1'
+map zr set relativenumber
+map S $$SHELL
+map <c-d> trash
+map <c-k> push %mkdir<space>
+map <c-n> push %touch<space>
+map <c-i> $~/.config/lf/pv.sh $f
+
+# Unmap the default binding
+map <c-r> push :rename<space>
+map sa invert
+map sf select-all-files
+map sd select-all-dirs
+map <enter> push :open-with<space>
+map zp toggle_preview
+map * push :glob-select<space>
+
+# next/previous sibling dir
+map E :updir; down; open
+map I :updir; up; open
+
+map gh cd ~
+map gD cd ~/Documents
+map gd cd ~/Downloads
+map gw cd ~/Dev
+map go cd ~/.dotfiles
+map gl cd ~/.local
+map gc cd ~/.config
+map gu cd /usr
+
+cmd open ${{
+    case $(file --mime-type $f -b) in
+        text/*) nvim "$fx";;
+		inode/x-empty) nvim "$fx";;
+        *) for f in $fx; do xdg-open $f > /dev/null 2> /dev/null & done;;
+    esac
+}}
+
+cmd rename ${{
+	# Rename the file with a completely different name
+	# get 'basename' of the selection
+	filename="${f##*/}"
+	mv "$filename" "$1"
+}}
+
+cmd rename_filename ${{
+	# Edit the current filename
+	filename="${f##*/}"
+	extension="${filename##*.}"
+	extension_len="${#extension}"
+	displace=""
+
+	i=0
+	while [ "$i" -le $extension_len ]; do
+		i=$(( i + 1 ))
+		displace="${displace}<left>"
+	done
+
+	lf -remote "send $id push :rename<space>$filename$displace ($extension_len)"
+}}
+
+cmd video_preview ${{
+    cache="$(mktemp "${TMPDIR:-/tmp}/thumb_cache.XXXXX")"
+    ffmpegthumbnailer -i "$f" -o "$cache" -s 0
+    ~/.config/lf/draw_img.sh "$cache"
+}}
+
+map + video_preview
+
+cmd trash %trash-put $fx
+
+cmd tar ${{
+	# compress file or selected files with tar and gunzip
+	set -f
+	mkdir $1
+	cp -r $fx $1
+	tar czf $1.tar.gz $1
+	rm -rf $1
+}}
+
+cmd zip ${{
+	# compress current file or selected files with zip
+	set -f
+	mkdir $1
+	cp -r $fx $1
+	zip -r $1.zip $1
+	rm -rf $1
+}}
+
+cmd toggle_preview %{{
+    if [ "$lf_preview" = "true" ]; then
+        lf -remote "send $id :set ratios 1; set preview false"
+    else
+        lf -remote "send $id :set preview true; set ratios 2:1"
+    fi
+}}
+
+map aa rename-before-ext
+# append before ext
+cmd rename-before-ext &{{
+	if [ "$(echo "$fx" | wc -l)" -gt 1 ]; then
+		lf -remote "send $id echo You can't change more than one file name"
+		lf -remote "send $id unselect"
+	else
+		if [ -d "$f" ]; then
+			lf -remote "send $id rename"
+		else
+			ext_len="$(echo ${f##*.} | wc -m)" # extention length
+			for i in $(seq "$ext_len"); do
+				pos="${pos}<left>"
+			done
+			lf -remote "send $id rename"
+			lf -remote "send $id push "$pos""
+		fi
+	fi
+}}
+
+
+cmd newdir ${{
+	if [ "${#1[@]}" -eq "1" ]; then
+		mkdir "$1"
+	else
+		mkdir -- "$1"
+		mv -- $fx "$1"
+	fi
+}}
+
+cmd extract ${{
+    set -f
+    case $f in
+        *.tar.bz|*.tar.bz2|*.tbz|*.tbz2) tar xjvf $f;;
+        *.tar.gz|*.tgz) tar xzvf $f;;
+        *.tar.xz|*.txz) tar xJvf $f;;
+        *.zip) unzip $f;;
+        *.rar) unrar x $f;;
+        *.7z) 7z x $f;;
+    esac
+}}
+
+cmd open-with &"$@" "$fx"
+cmd yank-dirname $dirname -- "$f" | head -c-1 | xclip -i -selection clipboard
+cmd yank-path $printf '%s' "$fx" | xclip -i -selection clipboard
+cmd yank-basename $basename -a -- $fx | head -c-1 | xclip -i -selection clipboard
+
+source "/home/olmos/.config/lf/icons"

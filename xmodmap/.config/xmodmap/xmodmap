@@ -1,0 +1,19 @@
+keycode 66 = Mode_switch
+keysym h = h H Left
+keysym j = j J Down
+keysym k = k K Up
+keysym l = l L Right
+
+keysym a = a A Left
+keysym s = s S Down
+keysym w = w W Up
+keysym d = d D Right
+
+keysym x = x X BackSpace
+keysym z = z Z Return
+keysym u = u U Home
+keysym i = i I End
+keysym o = o O Prior
+keysym p = p P Next
+keycode 108 = Return
+keycode 134 = ISO_Level3_Shift

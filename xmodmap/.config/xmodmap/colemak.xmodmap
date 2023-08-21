@@ -1,0 +1,22 @@
+!xmodmap mod for the Colemak layout.
+keycode 66 = Mode_switch
+
+keycode 39 = r R BackSpace
+keycode 40 = s S Return
+
+keycode 44 = n N Left   Ntilde
+keycode 45 = e E Down   Eacute
+keycode 46 = i I Up     Iacute
+keycode 47 = o O Right  Oacute
+
+keycode 30 = l L braceleft parenleft
+keycode 31 = u U braceright parenright
+
+keycode 24 = q Q parenleft braceleft
+keycode 25 = w W parenright braceright
+keycode 26 = f F apostrophe
+
+keycode 32 = y Y apostrophe
+keycode 33 = semicolon colon quotedbl
+keycode 57 = k K Ntilde
+keycode 58 = m M underscore
