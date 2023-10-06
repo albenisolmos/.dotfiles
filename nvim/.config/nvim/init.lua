@@ -1,6 +1,6 @@
-local me = require('me')
+local config = require('config.setup')
 
-me.setup {
+config.init {
     status = 'medium',
     border = 'rounded',
     float = {
@@ -10,7 +10,7 @@ me.setup {
         'svelte', 'cssls',
         'rust_analyzer','clangd',
         'pyright', 'tsserver',
-        'tailwindcss',
+        'tailwindcss', 'astro',
         lua_ls = { settings = { Lua = {
             completion = {
                 enable = true,
@@ -20,11 +20,9 @@ me.setup {
     }
 }
 
-require('me.keymaps')
-require('me.plugins')
-require('me.settings')
-require('me.commands')
-require('me.statusline').init()
+require('config.keymaps')
+require('config.lazy')
+require('config.settings')
+require('config.commands')
 
-vim.cmd('source ~/.config/nvim/functions.vim')
-me.end_setup()
+config.end_init()
