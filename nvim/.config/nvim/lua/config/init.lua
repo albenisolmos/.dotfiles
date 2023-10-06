@@ -1,48 +1,126 @@
-local M = {}
-SETTINGS = {}
-local opt = vim.o
-local to_call = {}
+local o = vim.opt
+local g = vim.g
 
-local function set_status(statusln, cmdln)
-	opt.laststatus = statusln
-	opt.cmdheight = cmdln
+o.compatible = false
+o.termguicolors = true
+o.bg = 'dark'
+vim.cmd('colorscheme sol')
+vim.cmd('syntax on')
+o.lazyredraw = true
+o.title = true
+o.titlestring = '%t - Vim'
+o.number = true
+o.relativenumber = true
+o.cursorline = true
+o.guicursor='a:block,r-sm:hor100,i:block-iCursor,v:block-vCursor'
+o.showtabline= 1
+o.winwidth = 10
+o.hidden = true
 
-	if cmdln > 0 then
-		opt.showmode = true
-	end
-	if statusln == 0 then
-		vim.api.nvim_set_hl(0, 'Statusline', {link = 'VertSeparator'})
-		vim.api.nvim_set_hl(0, 'StatuslineNC', {link = 'VertSeparator'})
-		vim.cmd("set statusline=%{repeat('─',winwidth('.'))}")
-	end
-end
+-- Tabs & Spaces
+o.shiftwidth = 4
+o.tabstop = 4
+o.softtabstop = 4
+o.expandtab = true
 
-local status ={
-	minimal = {0,1},
-	medium  = {3,0},
-	full = {3,1}
+-- Text
+o.autoindent = true
+o.wrap = true
+o.linebreak = true
+o.breakindent = true
+o.list = true
+o.fillchars.vert = 'vert:│ '
+o.listchars.tab = ' '
+o.listchars.trail = '• '
+
+-- Fold
+o.foldmethod = 'expr'
+--o.foldlevelstart = 2
+--o.foldnestmax = 2
+o.foldenable = false
+--o.foldlevel = 1
+o.fillchars.fold = ' '
+o.foldexpr = 'nvim_treesitter#foldexpr()'
+
+-- Seaching
+o.incsearch = true
+o.hlsearch = true
+
+-- Backup & Undo
+o.swapfile = true
+o.writebackup = true
+o.backupdir:append(os.getenv('HOME') .. '/.local/share/nvim/backup')
+o.backupdir:append('.')
+
+-- Splitting
+o.splitkeep = 'cursor'
+o.splitright = true
+o.splitbelow = true
+
+-- Auto-completion
+o.completeopt = 'menu,menuone,noselect'
+
+-- Status
+o.showmode = false
+o.showcmdloc = 'statusline'
+o.ruler = true
+o.rulerformat="%50(%=%=%f\z
+    %( %M %)%( %R %)%( %H %)\z
+     %{fnamemodify(getcwd(),':t')}%)"
+
+-- nose
+o.scrolloff= 5
+o.mouse = 'a'
+o.shortmess:append('c')
+o.ttyfast = true
+o.clipboard = 'unnamedplus'
+o.formatoptions:append('t')
+o.jumpoptions:append('view')
+
+-- Ignore files
+o.wildignore = {
+    '*.pyc,*.o',
+    'build/*',
+    '**/node_modules/*',
+    '**/.git/*'
 }
 
-function M.setup(args)
-	SETTINGS = args
+vim.diagnostic.config {
+    virtual_text = false
+}
 
-	if args['status'] then
-		table.insert(to_call, function()
-			set_status(unpack(status[args.status]))
-		end)
-	end
+require('config.statusline')
 
-	if SETTINGS.float.border == 'margin' then
-		SETTINGS.float.border = 'rounded'
-		SETTINGS._hide_border = true
-	end
+-- Disable built-in plugins
+g.venter_disable_vertsplit = true
+g.user_emmet_leader_key = '<C-a>'
+g.gitgutter_sign_priority = 10
+g.gitgutter_map_keys = 0
+g.gitgutter_sign_added = '│'
+g.gitgutter_sign_removed  = '│'
+g.gitgutter_sign_modified  = '│'
+g.gitgutter_sign_removed_first_line = '‾'
+g.gitgutter_sign_removed_above_and_below = '_¯'
+g.gitgutter_sign_modified_removed   = '│_'
+g.lf_replace_netrw = true
+g.venter_width = 20
 
-end
-
-function M.end_setup()
-	for _, call in pairs(to_call) do
-		call()
-	end
-end
-
-return M
+-- Disable built-in plugins
+g.loaded_gzip = true
+g.loaded_tar = true
+g.loaded_tarPlugin = true
+g.loaded_zip = true
+g.loaded_zipPlugin = true
+g.loaded_getscript = true
+g.loaded_getscriptPlugin = true
+g.loaded_vimball = true
+g.loaded_vimballPlugin = true
+g.loaded_matchit = true
+--g.loaded_matchparen = true
+g.loaded_2html_plugin = true
+g.loaded_logiPat = true
+g.loaded_rrhelper = true
+g.loaded_netrw = true
+g.loaded_netrwPlugin = true
+g.loaded_netrwSettings = true
+g.loaded_netrwFileHandlers = true
