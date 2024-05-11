@@ -1,13 +1,12 @@
-local M = {telescope = {}}
+local M = {}
 
-function M.fzf_project()
-	require('fzf-lua').fzf_exec("rg --files", {
-		actions = {
-			-- Use fzf-lua builtin actions or your own handler
-			['default'] = require'fzf-lua'.actions.file_edit,
-			['ctrl-y'] = util.add_project
-		}
-	})
+function M.replace_work_in_selection()
+    local curr_word = vim.fn.expand('<cword>')  -- Get the word under the cursor
+    local mode = vim.fn.mode()
+
+    if mode == 'v' or mode == "V" then
+        return string.format([[:s/%s/%s/g<left><left>]], curr_word, curr_word)
+    end
 end
 
 return M

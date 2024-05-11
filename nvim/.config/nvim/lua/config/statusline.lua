@@ -1,12 +1,19 @@
-local M = {}
 local current_mode = ''
 local statusline_bg
+
 local colors = {
 	normal = '#626262',
 	insert = '#FFAD57',
 	visual = '#B16286',
 	cmd = '#B16286'
 }
+
+local color_for_modes = {
+    i = colors.insert,
+    v = colors.visual,
+    c = colors.cmd
+}
+
 local mode_map = {
 	['n'] = 'N',
 	['no'] = 'n·operator pending',
@@ -73,12 +80,8 @@ local function statusline()
 
 	if current_mode == new_mode then
 		goto _end
-	elseif new_mode == 'i' then
-		set_hi_color(colors.insert)
-	elseif new_mode == 'v' or new_mode == 'V' or new_mode == '' then
-		set_hi_color(colors.visual)
-	elseif new_mode == 'c' then
-		set_hi_color(colors.cmd)
+    elseif color_for_modes[new_mode] then
+		set_hi_color(color_for_modes[new_mode])
 	else
 		set_hi_color(colors.normal)
 	end
@@ -97,6 +100,7 @@ local function statusline()
 		"  %{fnamemodify(getcwd(),':t')} "
 	})]]
 	return table.concat({
+        ' ',
 		mode_map[new_mode] or new_mode,
 		"%=\z
 	    %f\z
@@ -107,18 +111,14 @@ local function statusline()
 	})
 end
 
-function M.init()
-	statusline_bg = vim.api.nvim_get_hl_by_name('StatusLine', {}).background
+statusline_bg = vim.api.nvim_get_hl_by_name('StatusLine', {}).background
 
-	local augroup = vim.api.nvim_create_augroup('Statusline', {clear = true})
-	vim.api.nvim_create_autocmd('ModeChanged', {
-		group = augroup,
-		callback = function()
-			vim.opt.statusline = statusline()
-		end
-	})
+local augroup = vim.api.nvim_create_augroup('Statusline', {clear = true})
+vim.api.nvim_create_autocmd('ModeChanged', {
+    group = augroup,
+    callback = function()
+        vim.opt.statusline = statusline()
+    end
+})
 
-	vim.opt.statusline = statusline()
-end
-
-return M
+vim.opt.statusline = statusline()
