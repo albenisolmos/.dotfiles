@@ -78,40 +78,8 @@ return {
 					end,
 				},
 				mapping = {
-					["<C-n>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_next_item()
-						elseif snip.can_expand_or_advance() then
-							snip.expand_or_advance()
-						elseif has_words_before() then
-							cmp.complete()
-						else
-							fallback()
-						end
-					end, { "i", "s", "c" }),
-					["<C-p>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_prev_item()
-						elseif snip.can_jump(-1) then
-							snip.previous()
-						else
-							fallback()
-						end
-					end, { "i", "s", "c" }),
-					["<C-f>"] = cmp.mapping(function(fallback)
-						if snip.can_expand_or_advance() then
-							snip.expand_or_advance()
-						else
-							fallback()
-						end
-					end, { "s", "i" }),
-					["<C-b>"] = cmp.mapping(function(fallback)
-						if snip.can_jump(-1) then
-							snip.previous()
-						else
-							fallback()
-						end
-					end, { "s", "i" }),
+					["<C-n>"] = cmp.mapping.select_next_item {behavior = cmp.SelectBehavior.Insert},
+					["<C-p>"] = cmp.mapping.select_prev_item {behavior = cmp.SelectBehavior.Insert},
 					["<C-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4)),
 					["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4)),
 					["<C-e>"] = cmp.mapping.abort(),
@@ -135,6 +103,17 @@ return {
 			cmp.setup.cmdline(":", {
 				sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }),
 			})
+
+			vim.keymap.set({"i", "s"}, "<C-j>",function ()
+				if snip.can_expand_or_advance() then
+					snip.expand_or_advance()
+				end
+			end)
+			vim.keymap.set({"i", "s"}, "<C-k>",function ()
+				if snip.can_jump(-1) then
+					snip.previous()
+				end
+			end)
 		end,
 	},
 }
