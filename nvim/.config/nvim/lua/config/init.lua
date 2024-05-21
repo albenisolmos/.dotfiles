@@ -47,16 +47,9 @@ function M.init(args)
 
 	require("config.start")
 	require("config.keymaps")
-	require("config.lazy")
 	require("config.configs")
-	require("config.commands")
+	require("config.lazy")
 
-	for _, call in pairs(calls) do
-		call()
-	end
-end
-
-function M.end_init()
 	for _, call in pairs(calls) do
 		call()
 	end
