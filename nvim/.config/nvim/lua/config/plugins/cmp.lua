@@ -78,8 +78,14 @@ return {
 					end,
 				},
 				mapping = {
-					["<C-n>"] = cmp.mapping.select_next_item {behavior = cmp.SelectBehavior.Insert},
-					["<C-p>"] = cmp.mapping.select_prev_item {behavior = cmp.SelectBehavior.Insert},
+					["<C-n>"] = cmp.mapping(
+						cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+						{ "i", "c", "s" }
+					),
+					["<C-p>"] = cmp.mapping(
+						cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+						{ "i", "c", "s" }
+					),
 					["<C-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4)),
 					["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4)),
 					["<C-e>"] = cmp.mapping.abort(),
@@ -104,12 +110,13 @@ return {
 				sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }),
 			})
 
-			vim.keymap.set({"i", "s"}, "<C-j>",function ()
+			vim.keymap.set({ "i", "s" }, "<C-j>", function()
 				if snip.can_expand_or_advance() then
 					snip.expand_or_advance()
 				end
 			end)
-			vim.keymap.set({"i", "s"}, "<C-k>",function ()
+
+			vim.keymap.set({ "i", "s" }, "<C-k>", function()
 				if snip.can_jump(-1) then
 					snip.previous()
 				end
