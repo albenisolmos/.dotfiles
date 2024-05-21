@@ -48,7 +48,7 @@ o.hlsearch = true
 -- Backup & Undo
 o.swapfile = true
 o.writebackup = true
-o.backupdir:append(os.getenv("HOME") .. "/.local/share/nvim/backup")
+o.backupdir:append(vim.fn.has("macunix") == 1 and os.getenv("HOME") .. "/.local/share/nvim/backup" or "")
 o.backupdir:append(".")
 
 -- Splitting
@@ -124,3 +124,25 @@ g.loaded_netrw = true
 g.loaded_netrwPlugin = true
 g.loaded_netrwSettings = true
 g.loaded_netrwFileHandlers = true
+
+-- highlight signs
+local sign_define = vim.fn.sign_define
+local hightlights = {
+	"DiagnosticSignError",
+	"DiagnosticSignWarn",
+	"DiagnosticSignInfo",
+	"DiagnosticSignHint",
+}
+
+for _, hi in pairs(hightlights) do
+	sign_define(hi, { text = "", texthl = hi, linehl = "", numhl = hi })
+end
+
+-- Highlight yanked text
+vim.api.nvim_create_autocmd("TextYankPost", {
+	group = vim.api.nvim_create_augroup("yank_highlight", {}),
+	pattern = "*",
+	callback = function()
+		vim.highlight.on_yank({ higroup = "IncSearch", timeout = 300, on_visual = false })
+	end,
+})
