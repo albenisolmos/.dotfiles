@@ -29,20 +29,45 @@ local statuslines = {
 	full = { 3, 1 },
 }
 
+local properties = {
+	border = true,
+	lsp_clients = true,
+	emmet_filetypes = true,
+	statusline = function(value)
+		table.insert(calls, function()
+			local statusln = statuslines[value][1]
+			local cmdln = statuslines[value][2]
+
+			opt.laststatus = statusln
+			opt.cmdheight = cmdln
+
+			if cmdln > 0 then
+				opt.showmode = true
+			else
+				vim.api.nvim_set_hl(0, "MsgArea", { link = "Statusline" })
+			end
+
+			if statusln == 0 then
+				vim.cmd("set statusline=%{repeat('─',winwidth('.'))}")
+			end
+		end)
+	end,
+	disable_background = function()
+		table.insert(calls, function()
+			vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+		end)
+	end,
+}
+
 function M.init(args)
 	for key, value in pairs(args) do
-		assert(M[key], "Invalid config key: " .. key)
-		M[key] = value
-	end
-
-	if M["statusline"] then
-		table.insert(calls, function()
-			set_status(unpack(statuslines[args.statusline]))
-		end)
-	end
-
-	if M.border == "none" then
-		M.border = "rounded"
+		assert(properties[key], "Invalid config key: " .. key)
+		if properties[key] then
+			M[key] = value
+			if type(properties[key]) == "function" then
+				properties[key](value)
+			end
+		end
 	end
 
 	require("config.start")
