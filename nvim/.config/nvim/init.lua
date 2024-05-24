@@ -1,6 +1,7 @@
 local config = require("config")
 
 config({
+	disable_background = true,
 	statusline = "medium",
 	border = "none",
 	emmet_filetypes = {
