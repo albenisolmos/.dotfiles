@@ -23,16 +23,8 @@ end
 local function start()
 	vim.api.nvim_command("enew")
 
-	local buf = vim.api.nvim_get_current_buf()
 	local eob = vim.opt.fillchars:get().eob or "~"
-
-	autocmd("InsertEnter", {
-		buffer = buf,
-		callback = function()
-			vim.api.nvim_command("enew")
-			vim.opt.fillchars:append({ eob = eob })
-		end,
-	})
+	local buf = vim.api.nvim_get_current_buf()
 
 	vim.cmd.setlocal("nonumber")
 	vim.cmd.setlocal("norelativenumber")
@@ -64,12 +56,26 @@ local function start()
 
 		vim.api.nvim_buf_set_lines(buf, y, -1, false, { center_line })
 	end
+
+	autocmd({ "InsertEnter", "WinNew" }, {
+		buffer = buf,
+		callback = function()
+			vim.api.nvim_command("enew")
+			vim.opt.fillchars:append({ eob = eob })
+		end,
+	})
+
+	-- Avoid paste content in start buffer
+	vim.keymap.set("n", "p", "<nop>", { buffer = true })
+	vim.keymap.set("n", "P", "<nop>", { buffer = true })
 end
 
 autocmd({ "VimEnter" }, {
-	callback = function(ev)
+	callback = function()
 		if api.nvim_call_function("argc", {}) ~= 0 then
 			return
+		elseif vim.fn.filereadable("Session.vim") ~= 0 then
+			api.nvim_command("source Session.vim")
 		end
 
 		start()
