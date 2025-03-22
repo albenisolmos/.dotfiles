@@ -14,15 +14,13 @@ config({
 		"astro",
 	},
 	lsp_clients = {
-		"marksman",
-		"svelte",
-		"cssls",
-		"rust_analyzer",
-		"clangd",
-		"pyright",
-		"tsserver",
-		"tailwindcss",
-		"astro",
+		astro = {
+			init_options = {
+				typescript = {
+					tsdk = vim.fs.normalize("~/AppData/Local/pnpm/global/5/node_modules/typescript/lib"),
+				},
+			},
+		},
 		lua_ls = {
 			settings = {
 				Lua = {

@@ -10,8 +10,8 @@ local function check_keyboard()
 end
 
 -- Save / Exit
-map("n", "<leader>w", "<cmd>w<cr>")
 map("n", "<leader>q", "<cmd>q<cr>")
+map("n", "<leader>w", "<cmd>w<cr>")
 map("n", "<leader>c", "<cmd>bd<cr>")
 map("n", "<leader>Q", "<cmd>q!<cr>")
 
@@ -35,8 +35,6 @@ map("v", "<leader>rw", require("config.utils").replace_work_in_selection, { expr
 -- Move lines
 map("n", "<c-j>", ":m .+1<CR>==")
 map("n", "<c-k>", ":m .-2<CR>==")
-map("i", "<c-j>", "<Esc>:m .+1<CR>==gi")
-map("i", "<c-k>", "<Esc>:m .-2<CR>==gi")
 map("v", "<c-j>", ":m '>+1<CR>gv=gv")
 map("v", "<c-k>", ":m '<-2<CR>gv=gv")
 

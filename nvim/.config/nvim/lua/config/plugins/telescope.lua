@@ -1,4 +1,4 @@
-local builtin = {}
+local builtin = true
 local find_by_git = true
 
 local function toggle_find_method()
