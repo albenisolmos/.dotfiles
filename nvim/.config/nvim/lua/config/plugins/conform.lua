@@ -9,6 +9,9 @@ return {
 	opts = {
 		format_after_save = { timeout_ms = 500 },
 		formatters_by_ft = {
+			xml = { "lemminx" },
+			xaml = { "lemminx" },
+			cs = { "csharpier" },
 			lua = { "stylua" },
 			-- Conform will run multiple formatters sequentially
 			javascript = { { "prettierd", "prettier" } },
