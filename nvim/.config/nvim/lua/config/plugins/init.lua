@@ -5,19 +5,11 @@ return {
 	{ "j-hui/fidget.nvim", config = true },
 	{ "tpope/vim-fugitive", cmd = { "Git" } },
 	{ "mbbill/undotree", lazy = true },
-	{ "albenisolmos/center.nvim", config = false },
+	{ "albenisolmos/center.nvim", config = true },
 	{ "m4xshen/smartcolumn.nvim", config = true },
 	{ "lambdalisue/suda.vim", lazy = true },
 	"tpope/vim-obsession",
 	"tpope/vim-repeat",
-	{
-		"Exafunction/codeium.nvim",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"hrsh7th/nvim-cmp",
-		},
-		config = true,
-	},
 	-- Pairs
 	{ "yorickpeterse/nvim-tree-pairs", config = true },
 	{ "windwp/nvim-autopairs", config = true },

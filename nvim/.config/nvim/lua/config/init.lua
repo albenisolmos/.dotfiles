@@ -70,7 +70,7 @@ function M.init(args)
 		end
 	end
 
-	require("config.start")
+	--require("config.start")
 	require("config.keymaps")
 	require("config.configs")
 	require("config.lazy")

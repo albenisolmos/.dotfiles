@@ -12,6 +12,8 @@ config({
 		"javascript",
 		"svelte",
 		"astro",
+		"xml",
+		"xaml",
 	},
 	lsp_clients = {
 		astro = {
