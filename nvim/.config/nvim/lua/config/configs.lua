@@ -15,6 +15,7 @@ o.guicursor = "a:block,r-sm:hor100,i:block-iCursor,v:block-vCursor"
 o.showtabline = 1
 o.winwidth = 10
 o.hidden = true
+o.signcolumn = "auto"
 
 -- Tabs & Spaces
 o.shiftwidth = 4
@@ -85,10 +86,6 @@ o.wildignore = {
 	"**/.git/*",
 }
 
-vim.diagnostic.config({
-	virtual_text = false,
-})
-
 require("config.statusline")
 
 -- Disable built-in plugins
@@ -125,24 +122,60 @@ g.loaded_netrwPlugin = true
 g.loaded_netrwSettings = true
 g.loaded_netrwFileHandlers = true
 
--- highlight signs
-local sign_define = vim.fn.sign_define
-local hightlights = {
-	"DiagnosticSignError",
-	"DiagnosticSignWarn",
-	"DiagnosticSignInfo",
-	"DiagnosticSignHint",
-}
+vim.diagnostic.config({
+	virtual_text = false,
+	signs = {
+		text = {
+			[vim.diagnostic.severity.ERROR] = "",
+			[vim.diagnostic.severity.WARN] = "",
+			[vim.diagnostic.severity.INFO] = "",
+			[vim.diagnostic.severity.HINT] = "",
+		},
+		numhl = {
+			[vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
+			[vim.diagnostic.severity.WARN] = "DiagnosticSignWarn",
+			[vim.diagnostic.severity.INFO] = "DiagnosticSignInfo",
+			[vim.diagnostic.severity.HINT] = "DiagnosticSignHint",
+		},
+	},
+})
 
-for _, hi in pairs(hightlights) do
-	sign_define(hi, { text = "", texthl = hi, linehl = "", numhl = hi })
-end
+--for _, hi in pairs(hightlights) do
+--	sign_define(hi, { text = "", texthl = hi, linehl = "", numhl = hi })
+--end
 
 -- Highlight yanked text
 vim.api.nvim_create_autocmd("TextYankPost", {
 	group = vim.api.nvim_create_augroup("yank_highlight", {}),
 	pattern = "*",
 	callback = function()
-		vim.highlight.on_yank({ higroup = "IncSearch", timeout = 300, on_visual = false })
+		vim.hl.on_yank({ higroup = "IncSearch", timeout = 300, on_visual = false })
+	end,
+})
+
+local dynamic_padding_group = vim.api.nvim_create_augroup("dinamic_padding_group", {})
+
+--vim.api.nvim_create_autocmd("VimEnter", {
+--	desc = "Remove WezTerm padding when entering Neovim",
+--	group = dynamic_padding_group,
+--	command = ":silent !sd 'left = 20, right = 20, top = 20, bottom = 20' 'left = 0, right = 0, top = 0, bottom = 0' 'C:/Users/alben/.wezterm.lua'",
+--})
+--
+--vim.api.nvim_create_autocmd("VimLeavePre", {
+--	desc = "Add WezTerm padding padding back when exiting Neovim",
+--	group = dynamic_padding_group,
+--	command = ":silent !sd 'left = 0, right = 0, top = 0, bottom = 0' 'left = 20, right = 20, top = 20, bottom = 20' 'C:/Users/alben/.wezterm.lua'",
+--})
+vim.api.nvim_create_autocmd("VimEnter", {
+	callback = function()
+		--NVIM_ENTER=1
+		vim.cmd([[call chansend(v:stderr, "\033]1337;SetUserVar=NVIM_ENTER=MQ==\007")]])
+	end,
+})
+
+vim.api.nvim_create_autocmd("VimLeavePre", {
+	callback = function()
+		--NVIM_ENTER=0
+		vim.cmd([[call chansend(v:stderr, "\033]1337;SetUserVar=NVIM_ENTER=MA==\007")]])
 	end,
 })
