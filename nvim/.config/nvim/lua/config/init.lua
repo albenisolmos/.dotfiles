@@ -73,6 +73,7 @@ function M.init(args)
 	--require("config.start")
 	require("config.keymaps")
 	require("config.configs")
+	require("config.autocmds")
 	require("config.lazy")
 
 	for _, call in pairs(calls) do
