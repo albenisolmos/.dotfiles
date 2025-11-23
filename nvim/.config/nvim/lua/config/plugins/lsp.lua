@@ -1,12 +1,11 @@
 return {
-	"neovim/nvim-lspconfig",
 	{ "williamboman/mason.nvim", config = true },
 	{
 		"williamboman/mason-lspconfig.nvim",
 		config = function()
 			local clients = require("config").lsp_clients
-			local lspconfig = require("lspconfig")
-			local opts = {
+			local lspconfig = vim.lsp.config
+			local lsp_opts = {
 				autostart = true,
 				capabilities = require("cmp_nvim_lsp").default_capabilities(),
 				flags = {
@@ -14,20 +13,25 @@ return {
 				},
 			}
 
+			vim.lsp.config("*", {
+				root_markers = { ".git" },
+			})
+
+			require("mason").setup()
 			require("mason-lspconfig").setup({
 				handlers = {
 					function(server_name) -- default handler
-						lspconfig[server_name].setup(opts)
+						lspconfig(server_name, lsp_opts)
 					end,
 				},
 			})
 
 			for client, client_opts in pairs(clients) do
 				if type(client) == "number" then
-					lspconfig[client_opts].setup(opts)
+					lspconfig[client_opts](lsp_opts)
 				else
-					local tbl = vim.tbl_extend("force", opts, client_opts)
-					lspconfig[client].setup(tbl)
+					local tbl = vim.tbl_extend("force", lsp_opts, client_opts)
+					lspconfig(client, tbl)
 				end
 			end
 
