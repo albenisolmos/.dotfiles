@@ -6,7 +6,7 @@ PROFILE_NAME := $(shell powershell -Command "echo 'Split-Path -Leaf $$profile'")
 DOCUMENTS_DIR := $(shell powershell -Command "[Environment]::GetFolderPath([Environment+SpecialFolder]::MyDocuments)")
 endif
 
-.PHONY: all delete nvim powershell lf autohotkey vars
+.PHONY: all delete vars nvim powershell lf autohotkey wezterm
 
 all:
 	stow --verbose --target=$(HOME) --restow */
@@ -34,6 +34,10 @@ ifeq ("$(OS)","Windows_NT")
 else
 	echo "'autohotkey' is not supported on Linux."
 endif
+
+wezterm:
+	@if ( "$(OS)" -eq "Linux" ) { echo "'wezterm' is not supported for installation on Linux."}
+	@if ( "$(OS)" -eq "Windows_NT" ) { new-item -itemtype hardLink -path "$(USERPROFILE)" -name ".wezterm.lua" -value $(CURDIR)/wezterm/wezterm.lua }
 
 vars:
 	@echo "PROFILE_DIR: $(PROFILE_DIR)"
