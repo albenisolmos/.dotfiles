@@ -15,8 +15,8 @@ delete:
 	stow --verbose --target=$(HOME) --delete */
 
 nvim:
-	@if ( "$(OS)" -eq "Windows_NT" ) { new-item -itemtype Junction -path $(USERPROFILE)\AppData\Local -name nvim -value $(CURDIR)/nvim/.config/nvim }
-	@if ( "$(OS)" -eq "Linux") { ln -s $(CURDIR)/nvim/.config/nvim $(HOME)/.config}
+	@if ( "$(OS)" -eq "Windows_NT" ) { new-item -itemtype Junction -path $(USERPROFILE)\AppData\Local -name nvim -value $(CURDIR)/nvim }
+	@if ( "$(OS)" -eq "Linux") { ln -s $(CURDIR)/nvim/ $(HOME)/.config}
 
 powershell:
 	@if ( "$(OS)" -eq "Linux" ) { echo "'powershell' is not supported for installation on Linux."}
