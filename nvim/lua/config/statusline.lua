@@ -36,6 +36,21 @@ local mode_map = {
 	['t'] = 'Term'
 }
 
+function get_git_branch_system()
+    -- Run git command to get branch name
+    local result = vim.system({'git', 'branch', '--show-current'}, {
+        cwd = vim.fn.getcwd(),
+        text = true,
+    }):wait()
+    
+    if result.code == 0 and result.stdout and result.stdout ~= '' then
+        -- Trim whitespace and return
+        return vim.trim(result.stdout)
+    end
+    
+    return nil
+end
+
 local function lsp()
 	local count = {}
 	local levels = {
@@ -107,7 +122,8 @@ local function statusline()
 		%( %R%)%( %H%)%( %M%)\z
 		%=",
 		lsp(),
-		"  %{fnamemodify(getcwd(),':t')} "
+		"⇅ ", get_git_branch_system(),
+		"   %{fnamemodify(getcwd(),':t')} "
 	})
 end
 

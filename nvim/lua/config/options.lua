@@ -86,8 +86,6 @@ o.wildignore = {
 	"**/.git/*",
 }
 
-require("config.statusline")
-
 -- Disable built-in plugins
 g.venter_disable_vertsplit = true
 g.user_emmet_leader_key = "<C-a>"

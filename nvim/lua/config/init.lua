@@ -70,8 +70,8 @@ function M.init(args)
 		end
 	end
 
-	--require("config.start")
-	require("config.keymaps")
+	require("config.statusline")
+	require("config.start")
 	require("config.configs")
 	require("config.autocmds")
 	require("config.lazy")
