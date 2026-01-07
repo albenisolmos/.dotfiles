@@ -18,8 +18,4 @@ return {
 		"mattn/emmet-vim",
 		ft = config.emmet_filetypes,
 	},
-	-- Snip
-	"dcampos/nvim-snippy",
-	"honza/vim-snippets",
-	"dcampos/cmp-snippy",
 }
